@@ -7,4 +7,8 @@ const mongoose = require('mongoose');
 require('dotenv').config()
 //add model variable
 
-//
+//Set Middleware
+
+app.set('view engine', 'ejs');
+app.use(express.static('public'));
+app.use(express.urlencoded({extended: true}));
