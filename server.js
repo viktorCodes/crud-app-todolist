@@ -14,6 +14,6 @@ app.use(express.static('public'));
 app.use(express.urlencoded({extended: true}));
 
 
-mongoose.connect()
+mongoose.connect(process.env.DB_CONNECTION)
 
 app.listen(PORT, () => console.log(`Server is running on ${PORT}`))
