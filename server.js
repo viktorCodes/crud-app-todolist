@@ -50,7 +50,34 @@ mongoose.connect(process.env.DB_CONNECTION,
             response.redirect('/')
 
         }
+
+        
+
     })
 
+    //EDIT OR UPDATE METHOD
+
+    app
+    .route("/edit/:id")
+    .get((request, response) => {
+        const id = request.params.id;
+        TodoTask.find({}, (err, tasks) => {
+            response.render("edit.ejs", { todoTasks: tasks, idTask: id });
+        });
+    })
+    .post((request, response) => {
+        const id = request.params.id;
+        TodoTask.findByIdAndUpdate(
+            id,
+            {
+                title: request.body.title,
+                content: request.body.content
+            },
+
+            err => {
+                if (err) return response.status(500).send(err);
+                response.redirect("/");
+            });
+    });
 
 app.listen(PORT, () => console.log(`Server is running on ${PORT}`))
