@@ -4,8 +4,8 @@ const express = require('express');
 const app = express();
 const PORT = 8500;
 const mongoose = require('mongoose');
+const TodoTask = require('./models/TodoTask');
 require('dotenv').config()
-const TodoTask = require('./models/todotask')
 
 //Set Middleware
 
@@ -13,7 +13,7 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.urlencoded({extended: true}));
 
-
+//Connect to Mongo
 mongoose.connect(process.env.DB_CONNECTION, 
     {useNewUrlParser: true},
     () => {console.log('Connected to db!')})
@@ -21,14 +21,14 @@ mongoose.connect(process.env.DB_CONNECTION,
 //GET Method
 
     app.get('/', async(request, response) => {
-        try{
-            
-                response.render('index.ejs', {todoTaks: tasks})
-        
-        }catch (error) {
-            response.status(500).send({message: error.message})
+        try {
+            TodoTask.find({}, (err, tasks) => {
+                response.render("index.ejs", { todoTasks: tasks });
+            });
+        } catch (err) {
+            if (err) return response.status(500).send(err);
         }
-    })
+    });
 
 
     //POST Method
@@ -40,7 +40,7 @@ mongoose.connect(process.env.DB_CONNECTION,
                 title: request.body.title,
                 content: request.body.content
             }
-        )
+        );
         try{
             await todoTask.save()
             console.log(todoTask)
