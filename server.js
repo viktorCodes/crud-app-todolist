@@ -18,16 +18,39 @@ mongoose.connect(process.env.DB_CONNECTION,
     {useNewUrlParser: true},
     () => {console.log('Connected to db!')})
 
-
+//GET Method
 
     app.get('/', async(request, response) => {
         try{
-            TodoTask.find({}, (err, tasks) => {
-                res.render('index.ejs', {todoTaks: tasks})
-            })
-        }catch (err) {
-            if (err) returnres.status(500).send(err)
+            
+                response.render('index.ejs', {todoTaks: tasks})
+        
+        }catch (error) {
+            response.status(500).send({message: error.message})
         }
     })
+
+
+    //POST Method
+
+    app.post('/', async(request, response) => {
+        
+        const todoTask = new TodoTask(
+            {
+                title: request.body.title,
+                content: request.body.content
+            }
+        )
+        try{
+            await todoTask.save()
+            console.log(todoTask)
+            response.redirect('/')
+        }catch (err){
+            if (err) return response.status(500).send(err)
+            response.redirect('/')
+
+        }
+    })
+
 
 app.listen(PORT, () => console.log(`Server is running on ${PORT}`))
