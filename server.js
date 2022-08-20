@@ -2,7 +2,7 @@
 
 const express = require('express');
 const app = express();
-const PORT = 8500;
+const PORT = 8080;
 const mongoose = require('mongoose');
 const TodoTask = require('./models/TodoTask');
 require('dotenv').config()
